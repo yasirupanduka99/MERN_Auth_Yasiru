@@ -1,0 +1,15 @@
+  
+  .formBootstrap{
+    width: 500px;
+    background-color: #ffffff;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 40px;
+    border: 1px dashed #ccc;
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .formBootstrap h2{
+    text-align: center;
+  }
