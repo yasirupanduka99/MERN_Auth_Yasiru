@@ -1,5 +1,5 @@
 const express = require("express");
-const ItemRouter = express.Router();
+const ItemRoutes = express.Router();
 
 const {
     addItem,
@@ -10,12 +10,12 @@ const {
 } = require("../controller/item.controller");
 
 
-ItemRouter.post('/create', addItem);
-ItemRouter.get('/items', getAllItems);
-ItemRouter.get('/item/:id', getOneItem);
-ItemRouter.patch('/itemUpdate/:id', updateitem);
-ItemRouter.delete('/deleteItem/:id', deleteItem);
+ItemRoutes.post('/create', addItem);
+ItemRoutes.get('/items', getAllItems);
+ItemRoutes.get('/item/:id', getOneItem);
+ItemRoutes.patch('/itemUpdate/:id', updateitem);
+ItemRoutes.delete('/deleteItem/:id', deleteItem);
 
 
 
-module.exports = ItemRouter;
+module.exports = ItemRoutes;

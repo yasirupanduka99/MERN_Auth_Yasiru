@@ -12,9 +12,13 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
 
-//routes
-const ItemRouter = require('./routes/item.routes');
-app.use('/api/', ItemRouter);
+// import routes
+const ItemRoutes = require('./routes/item.routes');
+const UserRoutes = require('./routes/user.routes');
+
+// register routes
+app.use('/api/', ItemRoutes);
+app.use('/api/user/', UserRoutes);
 
 const PORT = process.env.PORT || 8070;
 
