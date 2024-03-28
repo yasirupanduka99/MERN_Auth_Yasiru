@@ -1,16 +1,16 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useItemContext } from "../hooks/useItemContext";
 
 //import css file
 import './AllItems.css'
 
 const AllItems = () => {
 
-    const navigate = useNavigate();
 
-    const [ allItems, setAllItems ] = useState([]);
+    // const [ allItems, setAllItems ] = useState([]); //no longer need useState cuz we setup useContext
+
+    const { items, dispatch } = useItemContext(); // this 'allItems' came through useItemContext and go to ItemContext.js file initilizer value 'items'
 
     useEffect(() => {
 
@@ -18,10 +18,12 @@ const AllItems = () => {
 
             try{
 
-                await axios.get('http://localhost:8000/api/items')
+                await axios.get('/api/items')
                 .then((res) => {
-                    setAllItems(res.data.AllItems);
+                    // setAllItems(res.data.AllItems); // no longer need cuz of useContext hook.
+                    dispatch({type: 'SET_ITEM', payload: res.data.AllItems})
                     console.log(res.data.message);
+                    console.log(res.data);
                     console.log('status : ' + res.data.status);
                 })
                 .catch((err) => {
@@ -36,26 +38,18 @@ const AllItems = () => {
 
         getAllItems(); // This line calls the getAllItems() function when the component mounts | mounts means when component start
 
-    }, []) //The empty dependency array ([]) as the second argument to useEffect indicates that this effect should only run once when the component mounts.
+    }, [dispatch]) //The empty dependency array ([]) as the second argument to useEffect indicates that this effect should only run once when the component mounts.
 
 
-    const handleLogout = async () => {
-        
-    }
 
   return (
     <div className="allItemscontainer">
-
-        <div className="addItemBtnDiv">
-            <Link to='/createform'><button type="button" class="btn btn-success addItemBtn">Add Item</button></Link>
-            <button onClick={handleLogout} type="button" class="btn btn-danger addItemBtn">Logout</button>
-        </div>
         
         <table className="table align-middle">
             <thead>
                 <tr>
                     <th scope="col">No</th>
-                    <th scope="col">id</th>
+                    {/* <th scope="col">id</th> */}
                     <th scope="col">Item Name</th>
                     <th scope="col">Item Category</th>
                     <th scope="col">Item Qty</th>
@@ -64,14 +58,14 @@ const AllItems = () => {
                 </tr>
             </thead>
             <tbody className="text-start">
-                {allItems.map((items, index) => (
-                    <tr key={items._id}>
+                {items && items.map((item, index) => (
+                    <tr key={item._id}>
                         <td>{index + 1}</td>
-                        <td>{items._id}</td>
-                        <td>{items.itemName}</td>
-                        <td>{items.itemCategory}</td>
-                        <td>{items.itemQty}</td>
-                        <td>{items.itemDescription}</td>
+                        {/* <td>{item._id}</td> */}
+                        <td>{item.itemName}</td>
+                        <td>{item.itemCategory}</td>
+                        <td>{item.itemQty}</td>
+                        <td>{item.itemDescription}</td>
                         <td>
                             <table>
                                 <tbody>

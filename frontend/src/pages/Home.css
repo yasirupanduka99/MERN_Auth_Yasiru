@@ -1,0 +1,26 @@
+.home {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 40px;
+}
+
+.addItemBtnDiv{
+    background-color: none; 
+    overflow: hidden;
+}
+
+.addItemBtn{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 20px;
+}
+
+.actionButtons {
+    background-color: none;
+    width: 100%;
+    display: inline;
+}
+
+.buttonsDiv{
+    float: right;
+}

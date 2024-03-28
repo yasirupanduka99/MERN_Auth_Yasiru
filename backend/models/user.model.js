@@ -48,4 +48,32 @@ userSchema.statics.signup = async function(email, password) { //this signup func
 
 }
 
+
+// static login method - this funnction is just like a mongodb model predefine function we use in route controller(ex: findOne(), findById()). but this function we created function.
+userSchema.statics.login = async function(email, password) {
+
+    // firstly validation
+    if (!email || !password) {
+        throw Error('❌ All fields must be filled!');
+    }
+
+    const user = await this.findOne({ email });
+
+    // check not-register user
+    if(!user){
+        throw Error('⚠️ Incorrect email!');
+    }
+
+    // compare user entered password with hashed password which is stored in database usinf bcrypt.compare() function.
+    const match = await bcrypt.compare(password, user.password);
+
+    // if the password don't match throw error
+    if (!match) {
+        throw Error('⚠️ Incorrect Password!');
+    }
+
+    return user;
+
+}
+
 module.exports = mongoose.model('User', userSchema);

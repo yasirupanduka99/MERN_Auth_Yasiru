@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import { useItemContext } from "../hooks/useItemContext";
 
 //importing CSS files
 import './CreateForm.css'
 
 const CreateForm = () => {
 
+    const { dispatch } = useItemContext();
+
     const [itemName, setItemName] = useState('');
     const [itemCategory, setItemCategory] = useState('');
     const [itemQty, setItemQty] = useState('');
     const [itemDescription, setItemDescription] = useState('');
 
-    const sendData = (e) => {
+    const sendData = async (e) => {
         e.preventDefault();
 
         try{
@@ -23,9 +26,10 @@ const CreateForm = () => {
                 itemDescription: itemDescription,
             }
     
-            axios.post('http://localhost:8000/api/create', newItemData)
+            await axios.post('/api/create', newItemData)
             .then((res) => {
                 alert(res.data.message);
+                dispatch({type: 'CREATE_ITEM', payload: res.data.CreatedData});
                 console.log(res.data.status);
                 console.log(res.data.message);
             })

@@ -1,12 +1,15 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import React from 'react';
 
+// import pages
+import Home from './pages/Home';
+
+// import components
 import CreateForm from './components/CreateForm';
 import AllItems from './components/AllItems';
 import Register from './auth/Register';
 import Login from './auth/Login';
-
-import './App.css';
+import NavBar from './components/NavBar';
 
 function App() {
   return (
@@ -14,14 +17,18 @@ function App() {
         
       <BrowserRouter>
 
+      <NavBar />
+
       <div className='pages'>
         <Routes>
+
+          <Route path='/' element={ <Home /> } />
 
           <Route exact path="/register" element={<Register/>} />
           <Route exact path="/login" element={<Login/>} />
 
           <Route path='/createform' element={<CreateForm/>} />
-          <Route path='/' element={<AllItems/>} />
+          <Route path='/allitems' element={<AllItems/>} />
 
         </Routes>
       </div>

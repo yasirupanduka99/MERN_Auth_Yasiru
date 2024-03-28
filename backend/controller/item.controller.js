@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const itemModel = require("../models/item.model");
 
 //Add/Create item router controller
@@ -18,7 +19,8 @@ const addItem = async (req, res) => {
 
         return res.status(200).send({
             status: true,
-            message: "✨ :: Data saved successfuly!"
+            message: "✨ :: Data saved successfuly!",
+            CreatedData: newItemObj
         })
 
     }catch(err){
@@ -35,7 +37,7 @@ const getAllItems = async (req, res) => {
 
     try{
 
-        const allItems = await itemModel.find();
+        const allItems = await itemModel.find().sort({createdAt: -1});
 
         return res.status(200).send({
             status: true,
@@ -59,6 +61,14 @@ const getOneItem = async (req, res) => {
     try{
 
         const itemID = req.params.id;
+
+        // checking id is valid id
+        if (!mongoose.Types.ObjectId.isValid(itemID)) {
+            return res.status(404).json({
+                error: '🤕 No such item in database!'
+            })
+        }
+
         const item = await itemModel.findById(itemID);
 
         return res.status(200).send({
@@ -83,6 +93,14 @@ const updateitem = async (req, res) => {
     try{
 
         const itemID = req.params.id;
+
+        // checking id is valid id
+        if (!mongoose.Types.ObjectId.isValid(itemID)) {
+            return res.status(404).json({
+                error: "🤕 Can't update Item, No such item in database!"
+            })
+        }
+    
         const { itemName, itemCategory, itemQty, itemDescription } = req.body;
 
         const itemData = {
@@ -96,7 +114,7 @@ const updateitem = async (req, res) => {
         const data = await itemModel.findById(itemID);
         if (!data) {
             return res.status(404).send({ 
-                DataNotFoundMessage: '⚠️ :: Data not found!',
+                DataNotFoundMessage: '🤕 Item not found!',
             });
         }
 
@@ -124,6 +142,14 @@ const deleteItem = async (req, res) => {
     try{
 
         const itemID = req.params.id;
+
+        // checking id is valid id
+        if (!mongoose.Types.ObjectId.isValid(itemID)) {
+            return res.status(404).json({
+                error: "🤕 Can't delete Item, No such item in database!"
+            })
+        }
+
         const delItem = await itemModel.findByIdAndDelete(itemID);
 
         return res.status(200).send({
