@@ -16,6 +16,11 @@ export const itemReducer = (state, action) => { //this itemReducer need two para
                 ...state, // Spread the previous state
                 items: [action.payload, ...state.items] //[] means array and ...state.items means dont update previous objects and add new object that action.payload have.
             }
+        case 'DELETE_ITEM':
+            return {
+                ...state, // Spread the previous state
+                items: state.items.filter((i) => i._id !== action.payload._id) // That mean filter all items that previous state id not equal to deleted document id. ('action.payload._id' means deleted documment id)
+            }
         default:
             return state //This default case means if there no case to maatch upper two case then other all cases return same previous state.
     }

@@ -155,6 +155,7 @@ const deleteItem = async (req, res) => {
         return res.status(200).send({
             status: true,
             message: "✨ :: Item Deleted!",
+            DelItem: delItem,
         })
 
     }catch(err){

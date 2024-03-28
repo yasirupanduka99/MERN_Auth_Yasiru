@@ -41,6 +41,27 @@ const AllItems = () => {
     }, [dispatch]) //The empty dependency array ([]) as the second argument to useEffect indicates that this effect should only run once when the component mounts.
 
 
+    // implementing function for delete data when button pressed!
+    const handleDelete = async (id) => {
+        
+        try{
+
+            await axios.delete(`/api/deleteItem/${id}`)
+            .then((res) => {
+                alert('✨ Delete Successfully!');
+                dispatch({type: 'DELETE_ITEM', payload: res.data.DelItem});
+                console.log('✅ Deleted item : ', res.data.DelItem);
+            })
+            .catch((err) => {
+                console.log("☠️ :: Delete API failed! ERROR : " + err.message);
+            })
+
+        } catch(err) {
+            console.log("☠️ :: handleDelete Function failed! ERROR : " + err.message);
+        }
+    }
+
+
 
   return (
     <div className="allItemscontainer">
@@ -69,8 +90,10 @@ const AllItems = () => {
                         <td>
                             <table>
                                 <tbody>
-                                    <td><button type="button" class="btn btn-warning">Edit</button></td>
-                                    <td><button type="button" class="btn btn-danger">Delete</button></td>
+                                    <tr>
+                                        <td><button type="button" class="btn btn-warning">Edit</button></td> &nbsp;
+                                        <td><button type="button" class="btn btn-danger" onClick={() => handleDelete(item._id)}>Delete</button></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </td>

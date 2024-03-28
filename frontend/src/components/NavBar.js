@@ -7,7 +7,7 @@ const NavBar = () => {
     <header>
         <div className="container">
             <Link to='/'>
-                <h1>MERN Home</h1>
+                <h1>MERN Authentication</h1>
             </Link>
         </div>
     </header>
