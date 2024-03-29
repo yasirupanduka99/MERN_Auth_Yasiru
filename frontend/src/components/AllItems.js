@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useItemContext } from "../hooks/useItemContext";
 
 //import css file
@@ -9,6 +9,7 @@ const AllItems = () => {
 
 
     // const [ allItems, setAllItems ] = useState([]); //no longer need useState cuz we setup useContext
+    const [ error, setError ] = useState(null);
 
     const { items, dispatch } = useItemContext(); // this 'allItems' came through useItemContext and go to ItemContext.js file initilizer value 'items'
 
@@ -21,6 +22,7 @@ const AllItems = () => {
                 await axios.get('/api/items')
                 .then((res) => {
                     // setAllItems(res.data.AllItems); // no longer need cuz of useContext hook.
+                    setError(null)
                     dispatch({type: 'SET_ITEM', payload: res.data.AllItems})
                     console.log(res.data.message);
                     console.log(res.data);
@@ -28,10 +30,12 @@ const AllItems = () => {
                 })
                 .catch((err) => {
                     console.log("☠️ :: Error on API URL! ERROR : ", err.message);
+                    setError(err.message);
                 })
 
             }catch(err){
                 console.log("☠️ :: getAllItems Function failed! ERROR : " + err.message);
+                setError(err.message);
             }
 
         }
@@ -91,8 +95,8 @@ const AllItems = () => {
                             <table>
                                 <tbody>
                                     <tr>
-                                        <td><button type="button" class="btn btn-warning">Edit</button></td> &nbsp;
-                                        <td><button type="button" class="btn btn-danger" onClick={() => handleDelete(item._id)}>Delete</button></td>
+                                        <td><button type="button" className="btn btn-warning">Edit</button></td>
+                                        <td><button type="button" className="btn btn-danger" onClick={() => handleDelete(item._id)}>Delete</button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -101,6 +105,8 @@ const AllItems = () => {
                 ))}
             </tbody>
         </table>
+
+        {error && <div className="error"> {error} </div>}
 
     </div>
   )

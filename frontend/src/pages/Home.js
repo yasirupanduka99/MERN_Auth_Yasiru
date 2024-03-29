@@ -16,8 +16,8 @@ const Home = () => {
         <div className="homeContainer">
             <div className="addItemBtnDiv">
                 <div className="buttonsDiv">
-                    <Link to='/createform'><button type="button" class="btn btn-success addItemBtn">Add Item</button></Link>
-                    <button onClick={handleLogout} type="button" class="btn btn-danger addItemBtn">Logout</button>
+                    <Link to='/createform'><button type="button" className="btn btn-success addItemBtn">Add Item</button></Link>
+                    <button onClick={handleLogout} type="button" className="btn btn-danger addItemBtn">Logout</button>
                 </div> 
             </div>
             <div className="home">

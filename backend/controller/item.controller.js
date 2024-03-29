@@ -7,6 +7,29 @@ const addItem = async (req, res) => {
 
         const { itemName, itemCategory, itemQty, itemDescription } = req.body;
 
+        // create array for contain validation errors.
+        let emptyfields = [];
+
+        //validations
+        if(!itemName) {
+            emptyfields.push('Item Name')
+        }
+        if(!itemCategory) {
+            emptyfields.push('Item Category')
+        }
+        if(!itemQty) {
+            emptyfields.push('Item Qty')
+        }
+        if(!itemDescription) {
+            emptyfields.push('Item Description')
+        }
+        if(emptyfields.length > 0) {
+            return res.status(400).send({
+                message: 'Please fill in all the fields',
+                emptyfields
+            })
+        }
+
         const newItemData = {
             itemName: itemName,
             itemCategory: itemCategory,

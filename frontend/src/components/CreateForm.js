@@ -13,6 +13,8 @@ const CreateForm = () => {
     const [itemCategory, setItemCategory] = useState('');
     const [itemQty, setItemQty] = useState('');
     const [itemDescription, setItemDescription] = useState('');
+    const [error, setError] = useState(null);
+    const [emptyfields, setEmptyFields] = useState([])
 
     const sendData = async (e) => {
         e.preventDefault();
@@ -28,13 +30,23 @@ const CreateForm = () => {
     
             await axios.post('/api/create', newItemData)
             .then((res) => {
+                setError(null);
+                setEmptyFields([]);
                 alert(res.data.message);
                 dispatch({type: 'CREATE_ITEM', payload: res.data.CreatedData});
                 console.log(res.data.status);
                 console.log(res.data.message);
             })
             .catch((err) => {
-                console.log("☠️ :: Error on API URL or newItemData object : " + err.message);
+                 // Handling error response from backend
+                if (err.response) {
+                    // If response has error messages
+                    setError(err.response.data.message); // Set error message from response, validation errors also asign to this
+                    setEmptyFields(err.response.data.emptyfields); // Set validation input fields name
+                } else {
+                    // If no response received
+                    setError("☠️ Error occurred while processing your request." + err.message); // Set a generic error message
+                }
             })
     
             //set State back to first state
@@ -45,6 +57,7 @@ const CreateForm = () => {
 
         }catch(err){
             console.log("☠️ :: sendData Function failed! ERROR : " + err.message);
+            setError(err.message);
         }
     }
 
@@ -58,21 +71,22 @@ const CreateForm = () => {
             <form onSubmit={sendData}>
                 <div className="form-group mb-3">
                     <label htmlFor="itemNameID">Item Name</label>
-                    <input type="text" className="form-control" id="itemNameID" placeholder="Enter Item Name" onChange={(e) => setItemName(e.target.value)} value={itemName}/>
+                    <input type="text" className={emptyfields.includes('Item Name') ? 'error form-control' : 'form-control'} id="itemNameID" placeholder="Enter Item Name" onChange={(e) => setItemName(e.target.value)} value={itemName}/>
                 </div>
                 <div className="form-group mb-3">
                     <label htmlFor="itemCategoryID">Item Category</label>
-                    <input type="text" className="form-control" id="itemCategoryID" placeholder="Enter Item Category" onChange={(e) => setItemCategory(e.target.value)} value={itemCategory}/>
+                    <input type="text" className={emptyfields.includes('Item Category') ? 'error form-control' : 'form-control'} id="itemCategoryID" placeholder="Enter Item Category" onChange={(e) => setItemCategory(e.target.value)} value={itemCategory}/>
                 </div>
                 <div className="form-group mb-3">
                     <label htmlFor="itemQtyID">Item Qty</label>
-                    <input type="number" className="form-control" id="itemQtyID" placeholder="Enter Item Qty" onChange={(e) => setItemQty(e.target.value)} value={itemQty}/>
+                    <input type="number" className={emptyfields.includes('Item Qty') ? 'error form-control' : 'form-control'} id="itemQtyID" placeholder="Enter Item Qty" onChange={(e) => setItemQty(e.target.value)} value={itemQty}/>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="itemDescriptionID" className="form-label">Item Description</label>
-                    <textarea className="form-control" id="itemDescriptionID" rows="3" onChange={(e) => setItemDescription(e.target.value)} value={itemDescription}></textarea>
+                    <textarea className={emptyfields.includes('Item Description') ? 'error form-control' : 'form-control'} id="itemDescriptionID" rows="3" onChange={(e) => setItemDescription(e.target.value)} value={itemDescription}></textarea>
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
+                {error && <div className="error"> {error} </div>}
             </form>
 
         </div>
