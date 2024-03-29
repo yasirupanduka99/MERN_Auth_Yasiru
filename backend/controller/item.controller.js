@@ -25,7 +25,7 @@ const addItem = async (req, res) => {
         }
         if(emptyfields.length > 0) {
             return res.status(400).send({
-                message: 'Please fill in all the fields',
+                errorMessage: 'Please fill in all the fields',
                 emptyfields
             })
         }
@@ -49,7 +49,7 @@ const addItem = async (req, res) => {
     }catch(err){
         return res.status(500).send({
             status: false,
-            message: err.message
+            errorMessage: err.message
         })
     }
 }
@@ -71,7 +71,7 @@ const getAllItems = async (req, res) => {
     }catch(err){
         return res.status(500).send({
             status: false,
-            message: err.message,
+            errorMessage: err.message,
         })
     }
 
@@ -88,7 +88,7 @@ const getOneItem = async (req, res) => {
         // checking id is valid id
         if (!mongoose.Types.ObjectId.isValid(itemID)) {
             return res.status(404).json({
-                error: '🤕 No such item in database!'
+                errorMessage: '🤕 No such item in database!'
             })
         }
 
@@ -103,7 +103,7 @@ const getOneItem = async (req, res) => {
     }catch(err){
         return res.status(500).send({
             status: false,
-            message: err.message,
+            errorMessage: err.message,
         })  
     }
 
@@ -120,11 +120,34 @@ const updateitem = async (req, res) => {
         // checking id is valid id
         if (!mongoose.Types.ObjectId.isValid(itemID)) {
             return res.status(404).json({
-                error: "🤕 Can't update Item, No such item in database!"
+                errorMessage: "🤕 Can't update Item, No such item in database!"
             })
         }
     
         const { itemName, itemCategory, itemQty, itemDescription } = req.body;
+
+        // create array for contain validation errors.
+        let emptyfields = [];
+
+        //validations
+        if(!itemName) {
+            emptyfields.push('Item Name')
+        }
+        if(!itemCategory) {
+            emptyfields.push('Item Category')
+        }
+        if(!itemQty) {
+            emptyfields.push('Item Qty')
+        }
+        if(!itemDescription) {
+            emptyfields.push('Item Description')
+        }
+        if(emptyfields.length > 0) {
+            return res.status(400).send({
+                errorMessage: 'Please fill in all the fields',
+                emptyfields
+            })
+        }
 
         const itemData = {
             itemName: itemName,
@@ -137,7 +160,7 @@ const updateitem = async (req, res) => {
         const data = await itemModel.findById(itemID);
         if (!data) {
             return res.status(404).send({ 
-                DataNotFoundMessage: '🤕 Item not found!',
+                errorMessage: '🤕 Item not found!',
             });
         }
 
@@ -152,7 +175,7 @@ const updateitem = async (req, res) => {
     }catch(err){
         return res.status(500).send({
             status: false,
-            message: err.message,
+            errorMessage: err.message,
         })  
     }
 
@@ -169,7 +192,7 @@ const deleteItem = async (req, res) => {
         // checking id is valid id
         if (!mongoose.Types.ObjectId.isValid(itemID)) {
             return res.status(404).json({
-                error: "🤕 Can't delete Item, No such item in database!"
+                errorMessage: "🤕 Can't delete Item, No such item in database!"
             })
         }
 
@@ -184,7 +207,7 @@ const deleteItem = async (req, res) => {
     }catch(err){
         return res.status(500).send({
             status: false,
-            message: err.message,
+            errorMessage: err.message,
         })  
     }
 

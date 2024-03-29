@@ -1,8 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useItemContext } from "../hooks/useItemContext";
+import { Link } from "react-router-dom";
 
-//import css file
+// date-fns
+import { format } from 'date-fns';
+
+// import css file
 import './AllItems.css'
 
 const AllItems = () => {
@@ -29,8 +33,12 @@ const AllItems = () => {
                     console.log('status : ' + res.data.status);
                 })
                 .catch((err) => {
-                    console.log("☠️ :: Error on API URL! ERROR : ", err.message);
-                    setError(err.message);
+                    if(err.response){
+                        setError(err.response.data.errorMessage);
+                    } else {
+                        // If no response received
+                        setError("☠️ Error occurred while processing your get request." + err.message); // Set a generic error message
+                    }
                 })
 
             }catch(err){
@@ -50,15 +58,27 @@ const AllItems = () => {
         
         try{
 
-            await axios.delete(`/api/deleteItem/${id}`)
-            .then((res) => {
-                alert('✨ Delete Successfully!');
-                dispatch({type: 'DELETE_ITEM', payload: res.data.DelItem});
-                console.log('✅ Deleted item : ', res.data.DelItem);
-            })
-            .catch((err) => {
-                console.log("☠️ :: Delete API failed! ERROR : " + err.message);
-            })
+            const confirmed = window.confirm('Are you sure you want to delete this item?');
+            if (confirmed) {
+                await axios.delete(`/api/deleteItem/${id}`)
+                .then((res) => {
+                    setError(null);
+                    alert('✨ Delete Successfully!');
+                    dispatch({type: 'DELETE_ITEM', payload: res.data.DelItem});
+                    console.log('✅ Deleted item : ', res.data.DelItem);
+                })
+                .catch((err) => {
+                    if(err.response){
+                        setError(err.response.data.errorMessage);
+                    } else {
+                        // If no response received
+                        setError("☠️ Error occurred while processing your delete request." + err.message); // Set a generic error message
+                    }
+                })
+            } else {
+                console.log('Deletion cancelled.');
+            }
+
 
         } catch(err) {
             console.log("☠️ :: handleDelete Function failed! ERROR : " + err.message);
@@ -69,6 +89,8 @@ const AllItems = () => {
 
   return (
     <div className="allItemscontainer">
+
+        {error && <div className="error"> {error} </div>}
         
         <table className="table align-middle">
             <thead>
@@ -85,18 +107,25 @@ const AllItems = () => {
             <tbody className="text-start">
                 {items && items.map((item, index) => (
                     <tr key={item._id}>
-                        <td>{index + 1}</td>
-                        {/* <td>{item._id}</td> */}
-                        <td>{item.itemName}</td>
-                        <td>{item.itemCategory}</td>
-                        <td>{item.itemQty}</td>
-                        <td>{item.itemDescription}</td>
+                        <td><p>{index + 1}</p></td>
+                        {/* <td><p>{item._id}</p></td> */}
+                        <td>
+                            <table>
+                                <tbody>
+                                    <tr> <td><h4>{item.itemName}</h4></td> </tr>
+                                    <tr> <td><small>{format(new Date(item.createdAt), 'dd/MM/yyyy HH:mm:ss')}</small></td> </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td><p>{item.itemCategory}</p></td>
+                        <td><p>{item.itemQty}</p></td>
+                        <td><p>{item.itemDescription}</p></td>
                         <td>
                             <table>
                                 <tbody>
                                     <tr>
-                                        <td><button type="button" className="btn btn-warning">Edit</button></td>
-                                        <td><button type="button" className="btn btn-danger" onClick={() => handleDelete(item._id)}>Delete</button></td>
+                                        <td><Link to={`/updateform/${item._id}`}><button type="button" className="btn btn-warning material-icons">edit</button></Link></td>
+                                        <td><button type="button" className="btn btn-danger material-icons" onClick={() => handleDelete(item._id)}>delete</button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -105,8 +134,6 @@ const AllItems = () => {
                 ))}
             </tbody>
         </table>
-
-        {error && <div className="error"> {error} </div>}
 
     </div>
   )

@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { useItemContext } from "../hooks/useItemContext";
+import { useParams, useNavigate } from "react-router-dom";
 
 //importing CSS files
 import './CreateForm.css'
 
-const CreateForm = () => {
+const UpdateForm = () => {
 
     const { dispatch } = useItemContext();
 
@@ -16,47 +17,77 @@ const CreateForm = () => {
     const [error, setError] = useState(null);
     const [emptyfields, setEmptyFields] = useState([])
 
-    const sendData = async (e) => {
+    const { id } = useParams(); //catch id from URL
+    const navigate = useNavigate();
+
+    useEffect(() => {
+
+        const getOneItem = async () => {
+            try{
+
+                await axios.get(`/api/item/${id}`)
+                .then((res) => {
+                    setError(null);
+                    setItemName(res.data.Item.itemName);
+                    setItemCategory(res.data.Item.itemCategory);
+                    setItemQty(res.data.Item.itemQty);
+                    setItemDescription(res.data.Item.itemDescription);
+                    console.log("✨ Project fetched successfuly!");
+                })
+                .catch((err) => {
+                    if(err.response){
+                        setError(err.response.data.errorMessage);
+                    } else {
+                        // If no response received
+                        setError("☠️ Error occurred while processing your get request." + err.message); // Set a generic error message
+                    }
+                })
+
+            }catch(err){
+                console.log("☠️ :: getOneItem Function failed! ERROR : " + err.message);
+                setError(err.message);
+            }
+        }
+
+        getOneItem();
+
+    }, [id])
+
+    const updatedata = async (e) => {
         e.preventDefault();
 
         try{
 
-            let newItemData = {
+            let itemData = {
                 itemName: itemName,
                 itemCategory: itemCategory,
                 itemQty: itemQty,
                 itemDescription: itemDescription,
             }
-    
-            await axios.post('/api/create', newItemData)
-            .then((res) => {
-                setError(null);
-                setEmptyFields([]);
-                alert(res.data.message);
-                dispatch({type: 'CREATE_ITEM', payload: res.data.CreatedData});
-                console.log(res.data.status);
-                console.log(res.data.message);
-            })
-            .catch((err) => {
-                 // Handling error response from backend
-                if (err.response) {
-                    // If response has error messages
-                    setError(err.response.data.errorMessage); // Set error message from response, validation errors also asign to this
-                    setEmptyFields(err.response.data.emptyfields); // Set validation input fields name
-                } else {
-                    // If no response received
-                    setError("☠️ Error occurred while processing your request." + err.message); // Set a generic error message
-                }
-            })
-    
-            //set State back to first state
-            setItemName('');
-            setItemCategory('');
-            setItemQty('');
-            setItemDescription('');
+
+            if (window.confirm('Are you sure you want to update this project?')) (
+                
+                await axios.patch(`/api/itemUpdate/${id}`, itemData)
+                .then((res) => {
+                    setError(null);
+                    setEmptyFields([]);
+                    alert(res.data.message);
+                    console.log(res.data.message);
+                    navigate('/'); // redirect to home page
+                })
+                .catch((err) => {
+                    if(err.response){
+                        setError(err.response.data.errorMessage);
+                        setEmptyFields(err.response.data.emptyfields); // Set validation input fields name
+                    } else {
+                        // If no response received
+                        setError("☠️ Error occurred while processing your patch request." + err.message); // Set a generic error message
+                    }
+                })
+            )
 
         }catch(err){
-            console.log("☠️ :: sendData Function failed! ERROR : " + err.message);
+            console.log("☠️ :: updatedata Function failed! ERROR : " + err.message);
             setError(err.message);
         }
     }
@@ -66,9 +97,9 @@ const CreateForm = () => {
     <div className="createFormContainer">
         
         <div className="formBootstrap">
-            <h2 className="mb-4">Add Items Form</h2>
+            <h2 className="mb-4">Update Form</h2>
 
-            <form onSubmit={sendData}>
+            <form onSubmit={updatedata}>
                 <div className="form-group mb-3">
                     <label htmlFor="itemNameID">Item Name</label>
                     <input type="text" className={emptyfields.includes('Item Name') ? 'error form-control' : 'form-control'} id="itemNameID" placeholder="Enter Item Name" onChange={(e) => setItemName(e.target.value)} value={itemName}/>
@@ -97,4 +128,4 @@ const CreateForm = () => {
 
 };
 
-export default CreateForm;
+export default UpdateForm;

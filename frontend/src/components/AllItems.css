@@ -1,0 +1,15 @@
+:root {
+    --primary: #1aac83;
+    --error: #e7195a;
+}
+
+.table h4{
+    font-weight: 600;
+    font-size: 1em;
+    color: var(--primary);
+}
+
+.table p{
+    font-size: 0.9em;
+    color: #555;
+}

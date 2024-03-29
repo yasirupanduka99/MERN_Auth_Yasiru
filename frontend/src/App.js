@@ -6,6 +6,7 @@ import Home from './pages/Home';
 
 // import components
 import CreateForm from './components/CreateForm';
+import UpdateForm from './components/UpdateForm';
 import AllItems from './components/AllItems';
 import Register from './auth/Register';
 import Login from './auth/Login';
@@ -28,6 +29,7 @@ function App() {
           <Route exact path="/login" element={<Login/>} />
 
           <Route path='/createform' element={<CreateForm/>} />
+          <Route path='/updateform/:id' element={<UpdateForm/>} />
           <Route path='/allitems' element={<AllItems/>} />
 
         </Routes>
