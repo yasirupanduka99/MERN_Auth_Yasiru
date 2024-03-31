@@ -5,7 +5,6 @@ const UserRoutes = express.Router();
 
 // login route
 UserRoutes.post('/login', loginUser);
-
 // Signup route
 UserRoutes.post('/signup', signupUser);
 

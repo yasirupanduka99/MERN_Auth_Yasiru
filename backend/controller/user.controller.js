@@ -45,7 +45,8 @@ const signupUser = async (req, res) => {
 
         res.status(200).json({
             email,
-            token
+            token,
+            message: "✅ User Registered Successfuly!"
         })
 
     } catch (error) {

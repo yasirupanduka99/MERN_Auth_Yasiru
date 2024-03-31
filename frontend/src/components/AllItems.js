@@ -29,7 +29,7 @@ const AllItems = () => {
                     setError(null)
                     dispatch({type: 'SET_ITEM', payload: res.data.AllItems})
                     console.log(res.data.message);
-                    console.log(res.data);
+                    console.log('res.data is : ', res.data);
                     console.log('status : ' + res.data.status);
                 })
                 .catch((err) => {
