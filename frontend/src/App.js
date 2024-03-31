@@ -3,14 +3,15 @@ import React from 'react';
 
 // import pages
 import Home from './pages/Home';
+import SignUp from './pages/SignUp';
+import Login from './pages/Login';
 
 // import components
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
 import AllItems from './components/AllItems';
-import Register from './auth/Register';
-import Login from './auth/Login';
 import NavBar from './components/NavBar';
+
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
 
           <Route path='/' element={ <Home /> } />
 
-          <Route exact path="/register" element={<Register/>} />
+          <Route exact path="/signup" element={<SignUp/>} />
           <Route exact path="/login" element={<Login/>} />
 
           <Route path='/createform' element={<CreateForm/>} />

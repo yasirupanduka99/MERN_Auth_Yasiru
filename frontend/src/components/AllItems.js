@@ -112,8 +112,8 @@ const AllItems = () => {
                         <td>
                             <table>
                                 <tbody>
-                                    <tr> <td><h4>{item.itemName}</h4></td> </tr>
-                                    <tr> <td><small>{format(new Date(item.createdAt), 'dd/MM/yyyy HH:mm:ss')}</small></td> </tr>
+                                    <tr><td><h4>{item.itemName}</h4></td></tr>
+                                    <tr><td><small>{format(new Date(item.createdAt), 'dd/MM/yyyy HH:mm:ss')}</small></td></tr>
                                 </tbody>
                             </table>
                         </td>
