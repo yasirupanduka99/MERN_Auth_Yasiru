@@ -1,4 +1,4 @@
-import { createContext, useReducer } from 'react';
+import { createContext, useEffect, useReducer } from 'react';
 
 export const AuthContext = createContext();
 
@@ -18,6 +18,15 @@ export const AuthContextProvider = ({ children }) => { //this children means wha
     const [state, dispatch] = useReducer(authReducer, {
         user: null
     })
+
+    // if user login or signup then react app should know user logged in even refresh happens. so create useEffect and get user from local storage and set the payload as that user. then even refresh the page react app can hold user.
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'))
+
+        if (user) {
+            dispatch({ type: 'LOGIN', payload: user })
+        }
+    }, [])
 
     console.log('AuthContext state: ', state)
 
