@@ -18,7 +18,7 @@ const UserRoutes = require('./routes/user.routes');
 
 // register routes
 app.use('/api/', ItemRoutes);
-app.use('/api/user/', UserRoutes);
+app.use('/user/', UserRoutes);
 
 const PORT = process.env.PORT || 8070;
 

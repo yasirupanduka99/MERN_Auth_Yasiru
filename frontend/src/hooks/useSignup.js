@@ -11,7 +11,7 @@ export const useSignup = () => {
         setIsLoading(true);
         setError(null);
 
-        await axios.post('/api/user/signup', {email, password})
+        await axios.post('/user/signup', {email, password})
         .then((res) => {
             console.log(res.data.message)
 

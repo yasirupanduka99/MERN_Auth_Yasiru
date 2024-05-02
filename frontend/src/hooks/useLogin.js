@@ -11,7 +11,7 @@ export const useLogin = () => {
         setIsLoading(true);
         setError(null);
 
-        await axios.post('/api/user/login', {email, password})
+        await axios.post('/user/login', {email, password})
         .then((res) => {
             console.log(res.data.message)
 
