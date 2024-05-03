@@ -156,10 +156,11 @@ const updateitem = async (req, res) => {
 
     // Checking loggedd user is updating only his data
     const itemUserID = data.user_id;
-    if (itemUserID != user_id){
-        return res.status(401).send({
-            errorMessage: "🔒 :: Unauthorized behaviour! User not belong to edit this data."
-        })
+    if (itemUserID != user_id) {
+      return res.status(401).send({
+        errorMessage:
+          "🔒 :: Unauthorized behaviour! User not belong to edit this data.",
+      });
     }
 
     const updateItemObj = await itemModel.findByIdAndUpdate(itemID, itemData);
