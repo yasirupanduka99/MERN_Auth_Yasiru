@@ -20,6 +20,10 @@ const itemSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
+    },
+    user_id: {
+        type: String,
+        required: true,
     }
 }, {timestamps: true})
 
